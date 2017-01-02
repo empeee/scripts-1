@@ -1,7 +1,7 @@
 # scripts
 Different general purpose scripts that make my life easier
 
-## bulk_convert.pl
+#### bulk_convert.pl
 ```
 bulk_convert.pl [options] <extension> <directory of files>
 ```
