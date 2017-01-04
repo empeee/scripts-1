@@ -8,7 +8,8 @@
 #       a given extension to an eps file
 #
 # CHANGELOG:
-#   v0.2: Improved conversion command (2017-01-03) KF
+#   v0.3: Fixed man page (2017-01-04 KF)
+#   v0.2: Improved conversion command (2017-01-03 KF)
 #   v0.1: Initial revision (2017-01-02 KF)
 #===============================================
 
@@ -201,8 +202,8 @@ B<bulk_convert> will convert all files with a given [extension] in [directory] a
 
 For example:
 
-  bulk_convert.pl -r --dest=./images png /my/dir/of/images
+  bulk_convert.pl png /my/dir/of/images --dest=./images --dpi=200 --verbose
   
-This command will recursively traverse the /my/dir/of/images directory (images and all children) and find all files ending in ".png".  It will then convert all these files and place them into the ./images directory (the script will preserve hieararchy)
+This command will recursively traverse the /my/dir/of/images directory (images and all children) and find all files ending in ".png".  It will then convert all these files with a dpi of 200, and print the file names to the terminal, and place them into the ./images directory (the script will preserve hieararchy).
 
 =cut
