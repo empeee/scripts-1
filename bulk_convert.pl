@@ -8,9 +8,10 @@
 #       a given extension to an eps file
 #
 # CHANGELOG:
-#   v0.3: Fixed man page (2017-01-04 KF)
-#   v0.2: Improved conversion command (2017-01-03 KF)
-#   v0.1: Initial revision (2017-01-02 KF)
+#   v0.1.0: Added general ext to ext conversion (2017-01-11 KF)
+#   v0.0.3: Fixed man page (2017-01-04 KF)
+#   v0.0.2: Improved conversion command (2017-01-03 KF)
+#   v0.0.1: Initial revision (2017-01-02 KF)
 #===============================================
 
 use strict;
@@ -28,7 +29,7 @@ my $force   = 0;
 my $level   = 2;
 my $noTrim  = 0;
 my $noFlat  = 0;
-my $dpi     = 600;
+my $dpi     = 300;
 my $dest    = '';
 
 GetOptions('verbose' => \$verbose,
@@ -44,13 +45,14 @@ GetOptions('verbose' => \$verbose,
 pod2usage(2) if $help;
 pod2usage(-exitval => 0, -verbose => 2) if $man;
 
-unless( $#ARGV == 1)
+unless( $#ARGV == 2)
 {
-  die "\nERROR: Not enough arguments\nUsage: bulk_convert [opts] <ext> <dir>\nUse '-man' option for more info\n";
+  die "\nERROR: Not enough arguments\nUsage: bulk_convert [opts] <source_ext> <convert_ext> <dir>\nUse '-man' option for more info\n";
 }
 
-my $ext = $ARGV[0];
-my $dir = $ARGV[1];
+my $startExt  = $ARGV[0];
+my $endExt    = $ARGV[1];
+my $dir       = $ARGV[2];
 
 # Create bceps directory if needed
 if ( $dest eq '')
@@ -70,17 +72,18 @@ unless( $level < 4 && $level >= 0)
 
 if ($verbose)
 {
-  print "Looking for files with .$ext in $dir and saving to $dest\n";
+  print "Looking for files with .$startExt in $dir and saving to $dest\n";
 }
 
 # Create a list of files in directory
 my @filesToConvert;
 find({wanted => \&find_file, no_chdir=>1}, $dir);
 
-# Generate convert command
+# Generate eps convert command
 my $epsCmd;
 if ($level == 0) { $epsCmd = "eps"; } 
 else { $epsCmd = "eps$level"; }
+
 
 my $cmdStart;
 my $cmdEnd;
@@ -92,20 +95,19 @@ else         { $trim = "-trim";    }
 if ($noFlat) { $flat = "";         }
 else         { $flat = "-flatten"; }
 
+
 $cmdStart = "convert -density $dpi $trim";
-$cmdEnd   = "-quality 100 $flat $epsCmd";
+$cmdEnd   = "-quality 100 $flat";
+
 
 # Iterate over all files and convert to eps
 foreach my $file (@filesToConvert)
-{
+{ 
   my $newFile =  $file;
   $newFile    =~ s/^$dir//;      # removes base directory from beginning of file name
-  $newFile    =~ s/$ext$/eps/;   # Appends new file with .eps instead of .<ext>
+  $newFile    =~ s/$startExt$/$endExt/;   # Appends new file with .<convert_ext> instead of .<source_ext>
   $newFile    =  $dest.$newFile;
-  
-  my $preFile =  $newFile;
-  $preFile    =~ s/eps$/png/;
-    
+     
   my $newDir = dirname($newFile);
   
   if (! -f $newFile || $force)
@@ -117,8 +119,14 @@ foreach my $file (@filesToConvert)
     }
     
     if ($verbose) { print "Converting $file ... "; }
-    
-    system("$cmdStart $file $cmdEnd:$newFile");
+      if ($endExt =~ "eps")
+      {
+        system("$cmdStart $file $cmdEnd $epsCmd:$newFile");
+      }
+      else
+      {
+        system("$cmdStart $file $cmdEnd $newFile");
+      }
         
     if ($verbose) { print "Done \n"; }
     
@@ -127,6 +135,7 @@ foreach my $file (@filesToConvert)
   {
     if ($verbose) { print "Skipping $file\n"; }
   }
+
 }
 
 print "Conversion complete!\n\n";
@@ -135,11 +144,12 @@ print "Conversion complete!\n\n";
 sub find_file {
   my $file = $File::Find::name;
   
-  if ($file =~ /$ext$/)
+  if ($file =~ /$startExt$/)
   {
     push @filesToConvert, $file;
   }
 }
+
 
 __END__
 #===============================================
@@ -151,7 +161,7 @@ bulk_convert.pl
 
 =head1 SYNOPSIS
 
-bulk_convert [options] <extension> <directory>
+bulk_convert [options] <source_ext> <convert_ext> <directory>
 
 Options:
   --force
@@ -198,12 +208,12 @@ Does not trim the image.  Trimming gets rid of similarly colored pixels around t
 
 =head1 DESCRIPTION
 
-B<bulk_convert> will convert all files with a given [extension] in [directory] and change them to eps files.
+B<bulk_convert> will convert all files with a given [source_ext]in [directory] and change them to [convert_ext] files.
 
 For example:
 
-  bulk_convert.pl png /my/dir/of/images --dest=./images --dpi=200 --verbose
+  bulk_convert.pl pdf bmp /my/dir/of/images --dest=./images --dpi=200 --verbose
   
-This command will recursively traverse the /my/dir/of/images directory (images and all children) and find all files ending in ".png".  It will then convert all these files with a dpi of 200, and print the file names to the terminal, and place them into the ./images directory (the script will preserve hieararchy).
+This command will recursively traverse the /my/dir/of/images directory (images and all children) and find all files ending in ".pdf".  It will then convert all these files to ".bmp" with a dpi of 200, and print the file names to the terminal, and place them into the ./images directory (the script will preserve hieararchy).
 
 =cut
