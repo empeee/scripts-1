@@ -4,10 +4,10 @@
 # Name: bulk_convert.pl
 # Author: Kevin Fronczak
 # Date: Jan 2, 2017
-# Desc: Converts all files in a directory with
-#       a given extension to an eps file
+# Desc: Converts files to or from eps
 #
 # CHANGELOG:
+#   v0.2.1: Default to source directory if no dest given (2017-04-19 KF)
 #   v0.2.0: Added serach and replace for xml files (adexl) (2017-04-19 KF)
 #   v0.1.0: Added general ext to ext conversion (2017-01-11 KF)
 #   v0.0.3: Fixed man page (2017-01-04 KF)
@@ -69,14 +69,10 @@ else
   }
 }
 
-# Create bceps directory if needed
+
 if ( $dest eq '' && !$findReplace)
 {
-  $dest = $ENV{"HOME"} . "/bceps";
-  unless( -e $dest or mkdir $dest)
-  {
-    die "ERROR: Unable to create $dest\n";
-  }
+  $dest = $dir;
 }
 
 # Check that level is appropriate value
