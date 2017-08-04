@@ -1,13 +1,46 @@
 # scripts
 Different general purpose scripts that make my life easier
 
-#### bulk_convert.pl
+bulk_convert.pl
+-----------------
 ```
 $ bulk_convert.pl [options] <extension> <directory of files>
 ```
 Bulk converts images into vector (eps) format.  Basically, I'll have large directories of BMP or PNG images saved from simulation and when documentation time comes around, I need to supply the images in a vector format (otherwise we get really fuzzy, crappy images).  So this script will go through and create the eps images for me and I never have to do any extra work.
 
-#### matlab_plotting
+WeatherLog
+-----------------
+
+Python 3+ only.  I wrote this to help me debug some problems that I speculated had to do with weather patterns (humidity, pressure, etc)
+
+#### Installation
+```
+python setup.py install
+```
+
+#### Usage
+Create a config file that looks like so:
+```ini
+[Setup]
+api=YOURAPIKEY FOR PYOWM
+location=LOCATION (see city.list.json)
+logpath=LOGPATH LOCATION
+interval=INTERVALTOSCAN
+runtime=HOW LONG TO RUN FOR
+temp_unit=fahrenheit/celsius
+```
+
+Then call the module and set the path.
+```python
+import WeatherLog.WeatherLog as w
+
+w.CONFIG_PATH = 'PATH TO YOUR CONFIG'
+w.main()
+```
+
+
+matlab_plotting
+-----------------
 ```
 > fixFig(fig, options)
 ```
