@@ -1,0 +1,17 @@
+
+
+;custom cdsenv
+
+;https://community.cadence.com/cadence_technology_forums/f/custom-ic-skill/13128/not-able-to-select-alt-key-for-bindkeys
+;Adding ALT key functions for bindkeys
+
+ui      enableMenuShortcuts     boolean nil
+
+;enable dynamic highlight of nets in schematics
+;schematic	schDynamicNetHilightOn	boolean	t
+
+
+
+
+
+
