@@ -1,0 +1,50 @@
+
+
+;custom cdsinit
+
+load("~/.bindkeys.il")
+
+;https://community.cadence.com/cadence_technology_forums/f/custom-ic-skill/21156/reposition-a-window-using-skill-ade-flow
+;Positioning Windows
+
+size=hiGetMaxScreenCoords()
+
+w=car(size)
+h=cadr(size)
+
+hp=round(1.0*h)
+hp2=round(0.3*h)
+
+wp=round(0.5*w)
+wp2=round(0.28*w)
+wp3=round(0.35*w)
+
+laylist=list(list(wp2+4    0) list(w  hp))
+schlist=list(list(wp2+4 0) list(w     hp))
+ciwlist=list(list(wp3  0) list(w  hp2))
+
+hiResizeWindow(window(1) ciwlist)
+
+envSetVal("schematic" "schWindowBBox"   'string sprintf(nil "%L" schlist))
+envSetVal("schematic" "symWindowBBox"   'string sprintf(nil "%L" schlist))
+envSetVal("layout"    "leWindowBBox"    'string sprintf(nil "%L" laylist)) 
+
+envSetVal("layoutXL"  "layoutWindow"    'string sprintf(nil "%L" laylist))
+envSetVal("layoutXL"  "schematicWindow" 'string sprintf(nil "%L" schlist))
+envSetVal("layoutXL"  "ciwWindow"       'string sprintf(nil "%L" ciwlist))
+
+;Positioning other windows
+pop_x = round(1.4*wp)
+pop_y = round(0.4*hp)
+hiEnqueueCmd("hiSetDBoxDefaultLocation(pop_x:pop_y)")
+hiEnqueueCmd("hiDisplayForm('schDescendForm list(pop_x pop_y))")
+hiEnqueueCmd("hiFormCancel(schDescendForm)")
+hiEnqueueCmd("hiDisplayForm('schDescendIterForm list(pop_x pop_y))")
+hiEnqueueCmd("hiFormCancel(schDescendIterForm)")
+
+;Preferences
+;editor = "nedit"
+;envSetVal("textedit" "useExternalEditor" 'boolean t)
+
+envSetVal("asimenv.startup" "simulator" 'string "afs")
+envSetVal("afs.envOpts" "userCmdLineOption" 'string "-q 0 -S 5")
