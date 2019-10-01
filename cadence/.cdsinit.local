@@ -48,3 +48,11 @@ hiEnqueueCmd("hiFormCancel(schDescendIterForm)")
 
 envSetVal("asimenv.startup" "simulator" 'string "afs")
 envSetVal("afs.envOpts" "userCmdLineOption" 'string "-q 0 -S 5")
+
+; ADE-L distributed processing
+envSetVal("asimenv.startup" "hostMode" 'string "distributed")
+envSetVal("asimenv.distributed" "queueName" 'string "QUEUENAME")
+envSetVal("asimenv.distributed" "showMessages" 'boolean t)
+envSetVal("asimenv.distributed" "emailNotify" 'boolean nil)
+; envSetVal("asimenv.distributed" "mailTo" 'string "email@example.com")
+
