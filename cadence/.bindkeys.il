@@ -110,6 +110,19 @@ procedure(selSame()
 
 ;*****************************************************************************************************************
 
+;   ***** BEGIN - custom ADE-L binkeys *****
+
+hiRegisterBindKeyPrefix("Artist")
+hiSetBindKeys( "Artist" list(
+list("Ctrl<Key>o" "AFS_ViewSimulatorOutput(stringToSymbol(_vivaGetSessionName()))")
+; list("Ctrl<Key>o" "_spectreViewSimulatorOutput(stringToSymbol(_vivaGetSessionName()))")
+) ; END bindkey list
+) ; END set bindkeys
+
+;   ***** END - custom ADE-L binkeys *****
+
+;*****************************************************************************************************************
+
 ;Load user specific display.drf
 if( isFile(sprintf(custom_display_file "%s/my_display.drf" getWorkingDir())) ||
     isFile(sprintf(custom_display_file envGetVal("graphic" "drfPath"))) then
