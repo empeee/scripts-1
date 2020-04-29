@@ -49,21 +49,21 @@ fixFig takes in a figure handle of 'fig' and an 'options' structure
 Typical usage involves the use of 'legend' and 'location' to set the figure's legend (a cell array) and the location of the legend.  'useColor' will force the plot to change the color of each line and 'markerCount' will change the number of markers per line.  'noMark' will disable the addition of markers for each line.
 
 Options:
-  -boxPlt     (def=0)
-  -thinLine   (def=0)
-  -allMark    (def=0)
-  -noLine     (def=0)
-  -offMark    (def=0)
-  -repMark    (def=0)
-  -linMark    (def=0)
-  -noMark     (def=0)
-  -useColor   (def=0)
-  -noLineFormat (def=0)
-  -markerCount (def=11)
-  -legend     (def=0)
-  -location   (def=Southeast)
-  -figWidth   (def=7)
-  -figHeight  (def=4)
+  - boxPlt     (def=0)
+  - thinLine   (def=0)
+  - allMark    (def=0)
+  - noLine     (def=0)
+  - offMark    (def=0)
+  - repMark    (def=0)
+  - linMark    (def=0)
+  - noMark     (def=0)
+  - useColor   (def=0)
+  - noLineFormat (def=0)
+  - markerCount (def=11)
+  - legend     (def=0)
+  - location   (def=Southeast)
+  - figWidth   (def=7)
+  - figHeight  (def=4)
 
 Examples:
 ```matlab
