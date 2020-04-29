@@ -74,3 +74,17 @@ fh = gcf;
 opts=struct('legend',myLegend,'location','Northwest','useColor',1,'noMark',1);
 fixFig(fh, opts);
 ```
+
+svs.py
+-----------------
+Python 2 only (ugh...).  I wrote this to help automate the task of schematic vs schematic and layout vs layout tasks (ie. remove all the manual stuff).  CAD servers I wrote this for only have Python 2.6 available so womp womp.  Had to use it.
+
+USAGE:
+`python svs.py [lvl] lib1 lib2 topcell [opts]`
+
+Generates CDL netlists for schematic views of given cellname and library and then runs SVS to compare.  The netlist is saved in your workdir and the LVS report is in workdir/CALIBRE
+
+Calling svs.py with the first argument of 'lvl' will run layout-vs-layout instead
+
+OPTIONS:
+  - `--views`: List of views relative to lib1 and lib2
