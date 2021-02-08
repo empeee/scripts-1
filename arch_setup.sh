@@ -40,7 +40,6 @@ fsck -N ${var_partition}2
 echo "Mount partitions"
 mount ${var_partition}2 /mnt
 mkdir -p /mnt/boot
-mount ${var_partition}1 /mnt/boot
 
 echo "Sync pacman repo and use fast mirrors"
 pacman -Syy --noconfirm
@@ -91,10 +90,11 @@ passwd
 # Bootloader - GRUB
 #------------------------
 echo "Install Grub bootloader"
+mount -t auto ${var_partition}1 /boot
 pacman -Syy
 pacman -S --noconfirm grub efibootmgr
 grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
-grub-mkconfig -o /boot/grub.cfg
+grub-mkconfig -o /boot/grub/grub.cfg
 
 
 #------------------------
