@@ -9,6 +9,7 @@
 #------------------------
 # Installation
 #------------------------
+timedatectl set-ntp true
 echo "Creating partition table"
 fdisk -l
 echo "Enter main drive"
@@ -36,26 +37,22 @@ mkfs.ext4 ${var_partition}2
 fsck -N ${var_partition}1
 fsck -N ${var_partition}2
 
+echo "Mount partitions"
+mount ${var_partition}2 /mnt
+mkdir -p /mnt/boot
+mount ${var_partition}1 /mnt/boot
+
 echo "Sync pacman repo and use fast mirrors"
 pacman -Syy --noconfirm
 pacman -S --noconfirm reflector
 reflector -c "US" -f 12 -l 10 -n 12 --save /etc/pacman.d/mirrorlist
 
-echo "Mounting partitions and installing with pacstrap"
-mount ${var_partition}2 /mnt
+echo "Installing with pacstrap"
 pacstrap /mnt base linux linux-firmware dhcpcd vim nano
 
 echo "Configuring system"
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
-
-echo "Install Grub bootloader"
-pacman -Syy
-pacman -S --noconfirm grub efibootmgr
-mkdir /boot/efi
-mount ${var_partition}1 /boot/efi
-grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot/efi
-grub-mkconfig -o /boot/grub/grub.cfg
 
 #------------------------
 # Configuration
@@ -63,14 +60,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 echo "Updating system clock"
 echo "Enter timezone (ie. America/New_York)"
 read var_timezone
-timedatectl set-ntp true
 timedatectl set-timezone $var_timezone
 hwclock --systohc
 timedatectl status 
 read -p "If correct, press any key to continue..."
 
 echo "Setting Locale"
-vim +%s/#en_US\.UTF-8/en_US\.UTF-8/g +wq /etc/locale.gen
+236 
 locale-gen
 echo LANG=en_US.UTF-8 > /etc/locale.conf
 export LANG=en_US.UTF-8
@@ -90,6 +86,16 @@ less /etc/hosts
 
 echo "Set root password"
 passwd
+
+#------------------------
+# Bootloader - GRUB
+#------------------------
+echo "Install Grub bootloader"
+pacman -Syy
+pacman -S --noconfirm grub efibootmgr
+grub-install --target=x86_64-efi --bootloader-id=GRUB --efi-directory=/boot
+grub-mkconfig -o /boot/grub.cfg
+
 
 #------------------------
 # Desktiop - XFCE
@@ -122,7 +128,7 @@ visudo /etc/sudoers
 echo "Create user"
 echo "Enter user name"
 read var_user
-useradd -m -G wheel -s $var_user
+useradd -m -G wheel $var_user
 passwd $var_user
 
 read -p "Press any key to reboot..."
