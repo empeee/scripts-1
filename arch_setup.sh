@@ -7,7 +7,7 @@
 #=======================================================================================
 
 if [ $1 = "config" ]; then
-  echo "Enter main drive:
+  echo "Enter main drive:"
   read var_partition
 
   #------------------------
